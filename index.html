@@ -2,127 +2,110 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Amazon Affiliate Link Generator</title>
-<meta name="description" content="Convert any Amazon link into your affiliate link instantly. Simple & fast.">
 
 <style>
-:root {
-  --pink: #ff4d8d;
-  --pink-dark: #ff3377;
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --text: #1e293b;
-  --muted: #64748b;
-  --border: #e2e8f0;
-}
-
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
+  background: #f8fafc;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  min-height: 100vh;
+  margin: 0;
+  padding: 16px;
 }
 
 .card {
-  background: var(--card);
-  max-width: 480px;
+  background: #fff;
   width: 100%;
-  padding: 30px;
-  border-radius: 18px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-  border: 1px solid var(--border);
+  max-width: 480px;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 h1 {
-  text-align: center;
+  font-size: 1.4rem;
   margin-bottom: 8px;
-  color: var(--pink);
+  color: #111827;
 }
 
-.subtitle {
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  margin-bottom: 25px;
-}
-
-label {
-  font-size: 14px;
-  font-weight: 600;
+p {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 16px;
 }
 
 input {
   width: 100%;
-  margin-top: 8px;
   padding: 14px;
-  border-radius: 12px;
-  border: 2px solid var(--border);
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
   font-size: 15px;
+  margin-bottom: 14px;
 }
 
 input:focus {
   outline: none;
-  border-color: var(--pink);
+  border-color: #ff4d6d;
 }
 
 button {
   width: 100%;
-  margin-top: 18px;
   padding: 14px;
-  border-radius: 14px;
   border: none;
-  background: linear-gradient(135deg, var(--pink), #ff8fb3);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#ff4d6d,#ff8fa3);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 button:hover {
-  background: linear-gradient(135deg, var(--pink-dark), var(--pink));
-}
-
-.result {
-  margin-top: 20px;
-  display: none;
-}
-
-.result p {
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: var(--muted);
+  opacity: 0.95;
 }
 
 .output {
-  background: #f1f5f9;
-  padding: 14px;
-  border-radius: 12px;
-  word-break: break-all;
+  margin-top: 16px;
+  display: none;
+}
+
+.output textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
   font-size: 14px;
 }
 
 .copy-btn {
   margin-top: 10px;
-  background: #1e293b;
+  background: #111827;
 }
 
-.footer {
-  margin-top: 20px;
+.warning {
+  margin-top: 12px;
+  background: #fff7ed;
+  color: #9a3412;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: none;
+}
+
+footer {
+  margin-top: 18px;
+  font-size: 0.8rem;
   text-align: center;
-  font-size: 12px;
-  color: var(--muted);
+  color: #6b7280;
 }
 </style>
 </head>
@@ -130,50 +113,84 @@ button:hover {
 <body>
 
 <div class="card">
-  <h1>🔗 Affiliate Link Tool</h1>
-  <p class="subtitle">Paste any Amazon link & get your affiliate link instantly</p>
+  <h1>🔗 Amazon Affiliate Link Generator</h1>
+  <p>Amazon product link paste karo — affiliate ID auto add ho jayega</p>
 
-  <label>Amazon Product / Search Link</label>
-  <input id="inputLink" placeholder="https://www.amazon.in/..." />
+  <input
+    id="inputLink"
+    type="text"
+    placeholder="Paste Amazon link (amazon.in / amzn.in)"
+  >
 
-  <button onclick="generateLink()">Generate Affiliate Link</button>
+  <button onclick="generate()">Generate Affiliate Link</button>
 
-  <div class="result" id="resultBox">
-    <p>Your Affiliate Link 👇</p>
-    <div class="output" id="outputLink"></div>
+  <div class="warning" id="warningBox">
+    ⚠️ amzn.in short links pe direct tag kaam nahi karta.  
+    Best results ke liye amazon.in product link use karo.
+  </div>
+
+  <div class="output" id="outputBox">
+    <textarea id="result" readonly></textarea>
     <button class="copy-btn" onclick="copyLink()">Copy Link</button>
   </div>
 
-  <div class="footer">
-    Affiliate ID: <b>customwishcar-21</b><br>
-    Works on mobile & desktop
-  </div>
+  <footer>
+    Affiliate ID: <strong>customwishcar-21</strong><br>
+    Commission user ko extra charge nahi hota
+  </footer>
 </div>
 
 <script>
 const AFFILIATE_TAG = "customwishcar-21";
 
-function generateLink() {
+function generate() {
   const input = document.getElementById("inputLink").value.trim();
-  const resultBox = document.getElementById("resultBox");
-  const output = document.getElementById("outputLink");
+  const outputBox = document.getElementById("outputBox");
+  const result = document.getElementById("result");
+  const warning = document.getElementById("warningBox");
 
-  if (!input.includes("amazon")) {
+  warning.style.display = "none";
+  outputBox.style.display = "none";
+
+  if (!input) {
+    alert("Please paste an Amazon link");
+    return;
+  }
+
+  // Validate Amazon link
+  if (
+    !input.includes("amazon.") &&
+    !input.includes("amzn.")
+  ) {
     alert("Please enter a valid Amazon link");
     return;
   }
 
-  let cleanLink = input.split("?")[0];
-  let affiliateLink = cleanLink + "?tag=" + AFFILIATE_TAG;
+  let finalLink = input;
 
-  output.textContent = affiliateLink;
-  resultBox.style.display = "block";
+  // amzn short link warning
+  if (input.includes("amzn.")) {
+    warning.style.display = "block";
+    finalLink = input; // cannot safely append tag
+  } else {
+    // Remove old tag if exists
+    finalLink = finalLink.replace(/([&?])tag=[^&]+/, "");
+
+    // Append affiliate tag
+    finalLink += finalLink.includes("?")
+      ? "&tag=" + AFFILIATE_TAG
+      : "?tag=" + AFFILIATE_TAG;
+  }
+
+  result.value = finalLink;
+  outputBox.style.display = "block";
 }
 
 function copyLink() {
-  const text = document.getElementById("outputLink").textContent;
-  navigator.clipboard.writeText(text);
-  alert("Affiliate link copied!");
+  const textarea = document.getElementById("result");
+  textarea.select();
+  document.execCommand("copy");
+  alert("Affiliate link copied ✅");
 }
 </script>
 
